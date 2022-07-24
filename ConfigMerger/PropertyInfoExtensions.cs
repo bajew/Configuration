@@ -42,7 +42,7 @@ namespace ConfigMerger
                     var newList = Activator.CreateInstance(listofElements);
                     var list = prop.GetValue(newT);
                     list = newList;
-                    var add = prop.PropertyType.GetMethod("Add");
+                    var add = prop.PropertyType.GetMethod(nameof(IList<T>.Add));
                     foreach (var val in values)
                     {
                         add?.Invoke(list, new[] { TryGetValue(val, listElementType.First()) });
