@@ -73,17 +73,7 @@ public partial class CommandLineParser
             else if (arg.StartsWith("-"))
             {
                 //Falls beim vorherigen arg, keine Wert gesetzt wurde, dann war dieser ein bool flag, diesen auf true setzten
-                if (Args.ContainsKey(currentName) && (Args[currentName] == null || Args[currentName].Count == 0))
-                {
-                    var boolValue = "true";
-                    //Wenn der Flag auf --no- oder -no- beginnt, dann Flag negieren
-                    if (currentName.StartsWith("--no-") || currentName.StartsWith("-no-"))
-                    {
-                        currentName = currentName.Replace("no-", "");
-                        boolValue = "false";
-                    }
-                    Args[currentName] = new List<string>() { boolValue };
-                }
+                SetBool(currentName);
 
                 int valueDelimiterIndex = arg.IndexOf("=");
                 string? value = null;
@@ -118,15 +108,21 @@ public partial class CommandLineParser
             }
         }
         //Letzt Bool Option hinzufügen, falls sie nicht schon vorhanden ist
-        if (Args.ContainsKey(currentName) && (Args[currentName] == null || Args[currentName].Count == 0))
+         SetBool(currentName);
+
+        void SetBool(string currentName)
         {
-            var boolValue = "true";
-            if (currentName.StartsWith("--no-") || currentName.StartsWith("-no-"))
+            if (Args.ContainsKey(currentName) && (Args[currentName] == null || Args[currentName].Count == 0))
             {
-                currentName = currentName.Replace("no-", "");
-                boolValue = "false";
+                var boolValue = "true";
+                if (currentName.StartsWith("--no-") || currentName.StartsWith("-no-"))
+                {
+                    currentName = currentName.Replace("no-", "");
+                    boolValue = "false";
+                }
+                Args[currentName] = new List<string>() { boolValue };
             }
-            Args[currentName] = new List<string>() { boolValue };
+
         }
     }
 
